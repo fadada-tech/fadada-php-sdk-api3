@@ -23,8 +23,10 @@ class DocumentClient{
      * @return mixed
      */
     function uploadFile($token, $nonce, $userToken, UploadFileReq $req, $filePath){
-        $fileContent = fopen($filePath, "rb");
-        $fileHash = $this->getFinalHash($fileContent);
+       // $fileContent = fopen($filePath, "rb");
+       // $fileHash = $this->getFinalHash($fileContent);
+        $fileHash = hash_file("sha256", $filePath);
+        print("file hash = ".$fileHash."\n");
         $req->setFileContentHash($fileHash);
         $files = Array();
         $files["fileContent"] = $filePath;
@@ -43,19 +45,6 @@ class DocumentClient{
         return $this->client->downLoad_request($token, $nonce, $userToken, json_encode($req, JSON_FORCE_OBJECT),
             self::GetBySignFileId);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     function getFinalHash($fp, $MB = 1048576){
